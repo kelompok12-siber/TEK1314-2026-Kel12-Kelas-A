@@ -1,0 +1,17 @@
+$ sudo ss -lntp
+State      Recv-Q     Send-Q         Local Address:Port           Peer Address:Port     Process
+LISTEN     0          4096                 0.0.0.0:22                  0.0.0.0:*         users:(("sshd",pid=882,fd=3),("systemd",pid=1,fd=159))
+LISTEN     0          4096           127.0.0.53%lo:53                  0.0.0.0:*         users:(("systemd-resolve",pid=504,fd=15))
+LISTEN     0          70                 127.0.0.1:33060               0.0.0.0:*         users:(("mysqld",pid=863,fd=21))
+LISTEN     0          128             192.168.12.5:5000                0.0.0.0:*         users:(("python",pid=2051,fd=3))
+LISTEN     0          4096              127.0.0.54:53                  0.0.0.0:*         users:(("systemd-resolve",pid=504,fd=17))
+LISTEN     0          151                127.0.0.1:3306                0.0.0.0:*         users:(("mysqld",pid=863,fd=23))
+LISTEN     0          4096                    [::]:22                     [::]:*         users:(("sshd",pid=882,fd=4),("systemd",pid=1,fd=160))
+
+Diambil: 20 Oktober 2026 (sekitar 10.54 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 06-bukti-akhir-2-ss-ip-ufw.png
+Kontrol terkait:
+- B3 - MySQL hanya listening di 127.0.0.1:3306 dan 127.0.0.1:33060.
+- B5 - Dashboard hanya listening di 192.168.12.5:5000 (sebelumnya 0.0.0.0:5000).
+Port lain: 22 (SSH, dibatasi UFW hanya dari enp0s9/192.168.56.0/24), 53 (DNS resolver lokal).
+Catatan: sshd listen di 0.0.0.0:22 pada level aplikasi; pembatasan akses dilakukan di firewall (UFW), bukan di sshd.

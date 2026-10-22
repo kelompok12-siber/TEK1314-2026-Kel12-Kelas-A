@@ -1,0 +1,23 @@
+Dari Kali Linux (192.168.12.100) ke Target Node 192.168.12.5
+$ sudo nmap -sS -p- -n -Pn --min-rate 2000 -v 192.168.12.5 -oN nmap-sebelum.txt   (lalu nmap-sesudah.txt)
+
+=== SEBELUM (01:16 -0400 / 12.16 WIB) ===
+Rule lama dibuka kembali sementara (ufw allow 22/tcp; ufw allow in on enp0s8 to any port 5000 proto tcp)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+5000/tcp open  upnp      (label tebakan nmap; sebenarnya dashboard Flask BiliCheck)
+Not shown: 65533 filtered tcp ports (no-response)
+Nmap done: 1 IP address (1 host up) scanned in 65.88 seconds
+
+=== SESUDAH (01:18 -0400 / 12.18 WIB) ===
+Kondisi hardening saat ini (rule lama dihapus kembali)
+PORT     STATE SERVICE
+5000/tcp open  upnp
+Not shown: 65534 filtered tcp ports (no-response)
+Nmap done: 1 IP address (1 host up) scanned in 65.86 seconds
+
+Kesimpulan: jumlah port terbuka berkurang dari 2 menjadi 1. Port 22 (SSH) tidak lagi terbuka dari internal network;
+port 5000 tetap terbuka karena merupakan dashboard yang memang harus dapat diakses dari jaringan lab.
+Kontrol terkait: B1 (firewall default deny), B2 (dashboard hanya dari internal network), B3 (SSH hanya via host-only).
+Catatan: kondisi "sebelum" direproduksi dengan menambahkan kembali rule lama lalu menghapusnya lagi; status UFW akhir sama dengan ufw-status.txt.
+Screenshot: 08-nmap-sebelum.png, 09-nmap-sesudah.png. File mentah: nmap-sebelum.txt, nmap-sesudah.txt (dari Kali).

@@ -1,0 +1,54 @@
+$ ip -br a
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+enp0s3           UP             10.0.2.15/24 metric 100 fe80::a00:27ff:fef1:c4bc/64
+enp0s8           UP             192.168.12.5/24 fe80::a00:27ff:fec5:699f/64
+enp0s9           UP             192.168.56.10/24 fe80::a00:27ff:fee5:cd0b/64
+
+$ sudo ufw status numbered
+Status: active
+
+     To                         Action      From
+     --                         ------      ----
+[ 1] 5000/tcp                   ALLOW IN    192.168.12.0/24
+[ 2] 5000/tcp                   ALLOW IN    192.168.56.0/24
+[ 3] 22/tcp                     ALLOW IN    192.168.56.0/24
+[ 4] 22/tcp                     ALLOW IN    192.168.12.0/24
+[ 5] 5000/tcp on enp0s8         ALLOW IN    Anywhere
+[ 6] 5000/tcp (v6) on enp0s8    ALLOW IN    Anywhere (v6)
+
+$ sudo sshd -T | grep -E 'permitrootlogin|maxauthtries|passwordauthentication'
+maxauthtries 3
+permitrootlogin without-password
+passwordauthentication yes
+
+$ sudo ss -lntp
+State      Recv-Q     Send-Q         Local Address:Port            Peer Address:Port     Process
+LISTEN     0          4096                 0.0.0.0:22                   0.0.0.0:*         users:(("sshd",pid=882,fd=3),("systemd",pid=1,fd=90))
+LISTEN     0          4096           127.0.0.53%lo:53                   0.0.0.0:*         users:(("systemd-resolve",pid=504,fd=15))
+LISTEN     0          70                 127.0.0.1:33060                0.0.0.0:*         users:(("mysqld",pid=863,fd=21))
+LISTEN     0          4096              127.0.0.54:53                   0.0.0.0:*         users:(("systemd-resolve",pid=504,fd=17))
+LISTEN     0          151                127.0.0.1:3306                 0.0.0.0:*         users:(("mysqld",pid=863,fd=23))
+LISTEN     0          128                  0.0.0.0:5000                 0.0.0.0:*         users:(("python",pid=934,fd=3))
+LISTEN     0          4096                    [::]:22                      [::]:*         users:(("sshd",pid=882,fd=4),("systemd",pid=1,fd=91))
+
+$ systemctl status bilicheck --no-pager | head -12
+● bilicheck.service - Bilicheck Flask Dashboard
+     Loaded: loaded (/etc/systemd/system/bilicheck.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-10-20 03:16:23 UTC; 30min ago
+   Main PID: 934 (python)
+      Tasks: 1 (limit: 1055)
+     Memory: 16.6M (peak: 29.2M swap: 7.6M swap peak: 7.6M)
+        CPU: 1.052s
+     CGroup: /system.slice/bilicheck.service
+             └─934 /home/kel-12/bilicheck-backend/.venv/bin/python /home/kel-12/bilicheck-backend/app.py
+
+$ grep -rn "app.run" ~ --include=*.py
+/home/kel-12/bilicheck-backend/app.py:87:    app.run(host="0.0.0.0", port=5000, debug=False)
+
+Diambil: 20 Oktober 2026 (sekitar 10.47 WIB), VM Target Node (kel-12@kelompok-12)
+Kondisi: SEBELUM hardening ulang untuk 192.168.12.5. Screenshot: 00-sebelum-hardening.png
+Temuan sebelum hardening:
+- Rule [5] dan [6] membuka 5000/tcp pada enp0s8 ke Anywhere (v4 dan v6)  -> terlalu longgar.
+- Rule [4] mengizinkan SSH (22/tcp) dari 192.168.12.0/24  -> SSH seharusnya hanya lewat host-only.
+- permitrootlogin masih "without-password".
+- Flask listen di 0.0.0.0:5000 (semua adapter).

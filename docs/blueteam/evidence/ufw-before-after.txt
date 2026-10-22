@@ -1,0 +1,55 @@
+--- SEBELUM hapus rule lama (rule baru sudah ditambahkan) ---
+
+$ sudo ufw allow in on enp0s9 from 192.168.56.0/24 to any port 22 proto tcp
+Rule added
+$ sudo ufw allow in on enp0s8 from 192.168.12.0/24 to 192.168.12.5 port 5000 proto tcp
+Rule added
+
+$ sudo ufw status numbered
+Status: active
+
+     To                         Action      From
+     --                         ------      ----
+[ 1] 5000/tcp                   ALLOW IN    192.168.12.0/24
+[ 2] 5000/tcp                   ALLOW IN    192.168.56.0/24
+[ 3] 22/tcp                     ALLOW IN    192.168.56.0/24
+[ 4] 22/tcp                     ALLOW IN    192.168.12.0/24
+[ 5] 5000/tcp on enp0s8         ALLOW IN    Anywhere
+[ 6] 22/tcp on enp0s9           ALLOW IN    192.168.56.0/24
+[ 7] 192.168.12.5 5000/tcp on enp0s8 ALLOW IN    192.168.12.0/24
+[ 8] 5000/tcp (v6) on enp0s8    ALLOW IN    Anywhere (v6)
+
+--- Hapus rule lama ---
+
+$ sudo ufw delete allow in on enp0s8 to any port 5000 proto tcp
+Rule deleted
+Rule deleted (v6)
+$ sudo ufw delete allow from 192.168.12.0/24 to any port 5000 proto tcp
+Rule deleted
+$ sudo ufw delete allow from 192.168.56.0/24 to any port 5000 proto tcp
+Rule deleted
+$ sudo ufw delete allow from 192.168.12.0/24 to any port 22 proto tcp
+Rule deleted
+$ sudo ufw delete allow from 192.168.56.0/24 to any port 22 proto tcp
+Rule deleted
+
+--- SESUDAH ---
+
+$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp on enp0s9           ALLOW IN    192.168.56.0/24
+192.168.12.5 5000/tcp on enp0s8 ALLOW IN    192.168.12.0/24
+
+Diambil: 20 Oktober 2026 (sekitar 10.49-10.50 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 02-ufw-sebelum-sesudah-hapus-rule.png
+Kontrol terkait: A3 (SSH hanya lewat adapter host-only), B2 (dashboard hanya dari internal network), B1.
+Perubahan:
+- Dihapus: 5000/tcp on enp0s8 dari Anywhere (v4+v6), 5000 dari 192.168.56.0/24, 5000 dari 192.168.12.0/24 (tanpa batas interface),
+  22 dari 192.168.12.0/24, 22 dari 192.168.56.0/24 (tanpa batas interface).
+- Ditambah: 22/tcp hanya on enp0s9 dari 192.168.56.0/24; 5000/tcp hanya on enp0s8 dari 192.168.12.0/24 ke 192.168.12.5.

@@ -1,0 +1,33 @@
+$ sudo systemctl cat bilicheck
+
+# /etc/systemd/system/bilicheck.service
+[Unit]
+Description=Bilicheck Flask Dashboard
+After=network.target mysql.service
+Requires=mysql.service
+
+[Service]
+Type=simple
+User=kel-12
+WorkingDirectory=/home/kel-12/bilicheck-backend
+EnvironmentFile=/etc/bilicheck.env
+ExecStart=/home/kel-12/bilicheck-backend/.venv/bin/python /home/kel-12/bilicheck-backend/app.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+
+# /etc/systemd/system/bilicheck.service.d/hardening.conf
+[Service]
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=full
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+
+Diambil: 20 Oktober 2026 (sekitar 10.54 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 05-bukti-akhir-1-env-grants-unit.png, 06-bukti-akhir-2-ss-ip-ufw.png
+Kontrol terkait:
+- C1 - Kredensial dipisahkan dari source code: unit memakai EnvironmentFile=/etc/bilicheck.env, tidak ada password di unit file.
+- B4 - Drop-in hardening.conf menambah sandbox (NoNewPrivileges, PrivateTmp, ProtectSystem=full, ProtectKernelTunables, ProtectControlGroups).

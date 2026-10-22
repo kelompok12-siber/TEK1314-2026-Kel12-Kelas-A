@@ -1,0 +1,16 @@
+$ cd ~/bilicheck-backend
+$ cp app.py app.py.bak
+$ sed -i 's/host="0.0.0.0"/host="192.168.12.5"/' app.py
+$ grep -n "app.run" app.py
+87:    app.run(host="192.168.12.5", port=5000, debug=False)
+$ sudo systemctl restart bilicheck
+$ systemctl is-active bilicheck
+active
+$ sudo ss -lntp | grep 5000
+LISTEN 0      128     192.168.12.5:5000       0.0.0.0:*    users:(("python",pid=1985,fd=3))
+
+Diambil: 20 Oktober 2026 (sekitar 10.52 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 03-flask-bind-192.168.12.5.png
+Kontrol terkait: B5 - Dashboard tidak terpapar di adapter host-only.
+Sebelum: app.run(host="0.0.0.0") dan LISTEN 0.0.0.0:5000 (lihat 00-sebelum-hardening.txt).
+Sesudah: app.run(host="192.168.12.5") dan LISTEN 192.168.12.5:5000 saja. Cadangan kode lama: app.py.bak.

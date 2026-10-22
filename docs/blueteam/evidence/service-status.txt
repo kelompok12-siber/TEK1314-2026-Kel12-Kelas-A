@@ -1,0 +1,22 @@
+$ sudo stat -c '%a %U:%G %n' /etc/bilicheck.env
+600 root:root /etc/bilicheck.env
+
+$ systemctl is-active bilicheck mysql ssh
+active
+active
+active
+
+$ systemctl show bilicheck -p User -p Restart -p NoNewPrivileges -p ProtectSystem -p PrivateTmp
+Restart=on-failure
+User=kel-12
+PrivateTmp=yes
+ProtectSystem=full
+NoNewPrivileges=yes
+
+Diambil: 20 Oktober 2026 (sekitar 10.53-10.54 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 04-service-sandbox.png, 05-bukti-akhir-1-env-grants-unit.png
+Kontrol terkait:
+- C2 - /etc/bilicheck.env mode 600, pemilik root:root.
+- C3 - Restart=on-failure (service auto-restart).
+- B4 - Service berjalan sebagai user non-root "kel-12", ditambah sandbox: NoNewPrivileges, ProtectSystem=full, PrivateTmp.
+- Tiga service inti (bilicheck, mysql, ssh) aktif setelah hardening.

@@ -1,0 +1,13 @@
+$ grep -n "os.environ" ~/bilicheck-backend/app.py
+12:        password=os.environ["BILICHECK_DB_PASSWORD"],
+
+$ grep -rniE "password|secret" ~/bilicheck-backend/app.py
+12:        password=os.environ["BILICHECK_DB_PASSWORD"],
+
+Diambil: 20 Oktober 2026 (sekitar 10.54 dan 12.29 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 05-bukti-akhir-1-env-grants-unit.png, 10-grep-hardcode.png
+Kontrol terkait: C1 - Kredensial dipisahkan dari source code.
+Kesimpulan: kode membaca password database dari environment variable BILICHECK_DB_PASSWORD, bukan hardcode.
+Variabel itu disuplai systemd lewat EnvironmentFile=/etc/bilicheck.env (lihat systemd-unit-file.txt).
+Satu-satunya kemunculan "password"/"secret" di app.py adalah baris 12 di atas; tidak ada kredensial hardcode di file ini.
+Cakupan: hanya app.py.

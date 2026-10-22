@@ -1,0 +1,14 @@
+$ sudo mysql -e "SHOW GRANTS FOR 'biliapp'@'localhost';"
++--------------------------------------------------------------------+
+| Grants for biliapp@localhost                                       |
++--------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `biliapp`@`localhost`                        |
+| GRANT SELECT ON `bilicheck`.`pasien_bayi` TO `biliapp`@`localhost` |
+| GRANT SELECT ON `bilicheck`.`pengukuran` TO `biliapp`@`localhost`  |
+| GRANT SELECT ON `bilicheck`.`users` TO `biliapp`@`localhost`       |
++--------------------------------------------------------------------+
+
+Diambil: 20 Oktober 2026 (sekitar 10.54 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 05-bukti-akhir-1-env-grants-unit.png
+Kontrol terkait: A4/C4 - Least-privilege database.
+User aplikasi "biliapp" hanya punya SELECT (read-only) pada 3 tabel yang relevan; tidak ada INSERT/UPDATE/DELETE/DROP.

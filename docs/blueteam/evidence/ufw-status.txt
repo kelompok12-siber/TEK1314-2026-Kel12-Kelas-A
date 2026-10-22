@@ -1,0 +1,17 @@
+$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp on enp0s9           ALLOW IN    192.168.56.0/24
+192.168.12.5 5000/tcp on enp0s8 ALLOW IN    192.168.12.0/24
+
+Diambil: 20 Oktober 2026 (sekitar 10.54 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 06-bukti-akhir-2-ss-ip-ufw.png
+Kontrol terkait:
+- B1 - Firewall aktif, default deny (incoming).
+- B2 - Dashboard 5000/tcp hanya dari 192.168.12.0/24 pada enp0s8.
+- A3 - SSH 22/tcp hanya dari 192.168.56.0/24 pada enp0s9.

@@ -1,0 +1,14 @@
+┌──(root㉿kali)-[~]
+└─# curl -m 5 -s -o /dev/null -w "HTTP %{http_code}\n" http://192.168.12.5:5000/
+HTTP 200
+
+└─# nc -zv -w 3 192.168.12.5 22
+192.168.12.5: inverse host lookup failed: Unknown host
+(UNKNOWN) [192.168.12.5] 22 (ssh) : Connection timed out
+
+Diambil: 20 Oktober 2026 (sekitar 10.51 WIB), dari Kali Linux (internal network) ke 192.168.12.5
+Dijalankan setelah rule UFW baru dipasang (lihat ufw-before-after.txt).
+Kontrol terkait:
+- B2 - Dashboard tetap dapat diakses dari internal network (HTTP 200).
+- A3 - SSH (22/tcp) tidak dapat dijangkau dari internal network (Connection timed out = paket dijatuhkan firewall).
+Catatan: pesan "inverse host lookup failed" hanya soal DNS balik, tidak berpengaruh pada hasil.

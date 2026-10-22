@@ -1,0 +1,12 @@
+PS C:\Users\Administrator> ssh root@192.168.56.10
+root@192.168.56.10's password:
+Permission denied, please try again.
+root@192.168.56.10's password:
+Connection closed by 192.168.56.10 port 22
+
+Diambil: 20 Oktober 2026 (sekitar 12.05 WIB), dari Windows host (192.168.56.1) ke Target Node 192.168.56.10
+Screenshot: 07-ssh-root-login-gagal.png
+Kontrol terkait:
+- A1 - Login root SSH ditolak (PermitRootLogin no).
+- A2 - Koneksi diputus setelah percobaan autentikasi gagal (MaxAuthTries 3).
+Catatan: dengan PermitRootLogin no, root ditolak walaupun passwordnya benar. User biasa (kel-12) tetap dapat login lewat jalur host-only.

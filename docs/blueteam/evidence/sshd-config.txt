@@ -1,0 +1,29 @@
+$ grep -n "^Include" /etc/ssh/sshd_config
+12:Include /etc/ssh/sshd_config.d/*.conf
+
+$ sudo tee /etc/ssh/sshd_config.d/00-hardening.conf <<'EOF'
+PermitRootLogin no
+MaxAuthTries 3
+LoginGraceTime 30
+X11Forwarding no
+EOF
+PermitRootLogin no
+MaxAuthTries 3
+LoginGraceTime 30
+X11Forwarding no
+
+$ sudo sshd -t && sudo systemctl reload ssh
+(tidak ada error)
+
+$ sudo sshd -T | grep -E 'permitrootlogin|maxauthtries|logingracetime'
+logingracetime 30
+maxauthtries 3
+permitrootlogin no
+
+Diambil: 20 Oktober 2026 (sekitar 10.49 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 01-ssh-hardening.png
+Kontrol terkait:
+- A1 - Login root SSH dimatikan total: permitrootlogin "without-password" (sebelum) -> "no" (sesudah).
+- A2 - Percobaan autentikasi dibatasi: maxauthtries 3, logingracetime 30.
+Catatan: file dinamai 00-hardening.conf agar dibaca lebih dulu (OpenSSH memakai nilai pertama yang ditemukan).
+Catatan jujur: "passwordauthentication" tidak diambil ulang pada langkah ini; nilai terakhir yang tercatat adalah "yes" (lihat 00-sebelum-hardening.txt).

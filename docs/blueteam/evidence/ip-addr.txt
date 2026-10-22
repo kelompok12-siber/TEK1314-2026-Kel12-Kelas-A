@@ -1,0 +1,12 @@
+$ ip -br a
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+enp0s3           UP             10.0.2.15/24 metric 100 fe80::a00:27ff:fef1:c4bc/64
+enp0s8           UP             192.168.12.5/24 fe80::a00:27ff:fec5:699f/64
+enp0s9           UP             192.168.56.10/24 fe80::a00:27ff:fee5:cd0b/64
+
+Diambil: 20 Oktober 2026 (sekitar 10.54 WIB), VM Target Node (kel-12@kelompok-12)
+Screenshot: 06-bukti-akhir-2-ss-ip-ufw.png
+Topologi:
+- enp0s3 (adapter 1, NAT)           10.0.2.15       : akses internet/update, tidak ada service masuk
+- enp0s8 (adapter 2, internal net)  192.168.12.5    : dashboard BiliCheck, diakses dari Kali
+- enp0s9 (adapter 3, host-only)     192.168.56.10   : SSH admin dari host
